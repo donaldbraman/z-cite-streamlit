@@ -7,6 +7,8 @@ A Streamlit application for semantic search of Zotero libraries using ChromaDB a
 - **Semantic Search**: Search your Zotero libraries using natural language queries
 - **Vector Database**: Stores document chunks and embeddings in ChromaDB
 - **Document Processing**: OCR, chunking, and embedding generation for Zotero documents
+- **Zotero Integration**: Connect to your Zotero account and process your libraries
+- **OCR Storage**: Store OCR text as attachments in Zotero for reuse
 - **User-Friendly Interface**: Simple Streamlit interface for searching and managing libraries
 
 ## Installation
@@ -84,12 +86,31 @@ To update your environment with the latest dependencies:
 uv sync
 ```
 
+### Environment Variables
+
+The application uses environment variables for configuration. You can create a `.env` file based on the provided `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Then edit the `.env` file to add your Zotero API key and other configuration options.
+
 ### Searching Documents
 
 1. Enter your search query in the search box
 2. Adjust the threshold and results limit if needed
 3. Click the "Search" button
 4. View the results with highlighted matches
+
+### Managing Libraries
+
+1. Go to the "Libraries" tab
+2. Enter your Zotero API key
+3. Click "Fetch Libraries" to retrieve your Zotero libraries
+4. Select the libraries you want to process
+5. Click "Process Selected Libraries" to start processing
+6. Monitor the processing status in the "Processing Status" section
 
 ## Project Structure
 
@@ -100,6 +121,9 @@ z-cite-streamlit/
 │   ├── app.py          # Streamlit application
 │   ├── db.py           # ChromaDB integration
 │   ├── search.py       # Search functionality
+│   ├── zotero.py       # Zotero API integration
+│   ├── ocr.py          # OCR processing
+│   ├── document.py     # Document processing
 │   └── utils.py        # Utility functions
 ├── tests/
 │   └── __init__.py
@@ -107,6 +131,7 @@ z-cite-streamlit/
 ├── run_app.py          # Script to run the application
 ├── run_tests.py        # Script to run tests
 ├── pyproject.toml      # Project configuration with uv settings
+├── .env.example        # Example environment variables
 └── README.md           # This file
 ```
 
@@ -129,6 +154,14 @@ uv run run_tests.py
 ```bash
 uv run -m black z_cite_streamlit tests
 ```
+
+## Implementation Status
+
+- ✅ Phase 1: Core Setup and Search
+- ✅ Phase 2: Library Management and OCR Storage
+- ⬜ Phase 3: Document Processing Pipeline
+- ⬜ Phase 4: Settings and Refinement
+- ⬜ Phase 5: Testing and Deployment
 
 ## License
 

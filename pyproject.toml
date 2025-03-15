@@ -9,6 +9,10 @@ dependencies = [
     "chromadb==0.4.22",
     "sentence-transformers==3.4.1", 
     "numpy<2.0.0",  # ChromaDB is not compatible with NumPy 2.0
+    "pyzotero==1.6.9",
+    "requests>=2.28.0",
+    "python-dotenv>=1.0.0",
+    "python-dotenv>=1.0.0",
 ]
 
 [project.optional-dependencies]
