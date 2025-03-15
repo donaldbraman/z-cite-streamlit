@@ -5,7 +5,7 @@ description = "Z-Cite Streamlit Application for semantic search of Zotero librar
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "streamlit==1.35.0",
+    "streamlit==1.37.0",
     "chromadb==0.6.3",
     "sentence-transformers==3.4.1", 
     "numpy<2.0.0",  # ChromaDB is not compatible with NumPy 2.0
