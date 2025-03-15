@@ -64,7 +64,8 @@ class DocumentProcessor:
         self,
         library_type: str,
         library_id: str,
-        callback=None
+        callback=None,
+        limit: Optional[int] = None
     ) -> Tuple[int, int, List[str]]:
         """Process all documents in a library.
         
@@ -72,12 +73,17 @@ class DocumentProcessor:
             library_type: Library type ('user' or 'group').
             library_id: Library ID.
             callback: Optional callback function to report progress.
+            limit: Optional limit on the number of documents to process.
             
         Returns:
             Tuple of (total documents, processed documents, errors).
         """
         # Get documents from the library
         documents = self.zotero_manager.get_documents(library_type, library_id)
+        
+        # Apply limit if specified
+        if limit is not None and limit > 0:
+            documents = documents[:limit]
         
         total_documents = len(documents)
         processed_documents = 0

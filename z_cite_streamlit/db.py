@@ -39,42 +39,45 @@ class ChromaDBManager:
     def _init_collections(self):
         """Initialize ChromaDB collections."""
         # Documents collection
-        try:
-            self.documents_collection = self.client.get_collection(
-                name="documents",
-                embedding_function=self.embedding_function
-            )
-        except ValueError:
+        collection_names = self.client.list_collections()
+        
+        # Create or get documents collection
+        if "documents" not in collection_names:
             self.documents_collection = self.client.create_collection(
                 name="documents",
                 embedding_function=self.embedding_function,
                 metadata={"description": "Document metadata"}
             )
-        
-        # Chunks collection
-        try:
-            self.chunks_collection = self.client.get_collection(
-                name="chunks",
+        else:
+            self.documents_collection = self.client.get_collection(
+                name="documents",
                 embedding_function=self.embedding_function
             )
-        except ValueError:
+        
+        # Chunks collection
+        if "chunks" not in collection_names:
             self.chunks_collection = self.client.create_collection(
                 name="chunks",
                 embedding_function=self.embedding_function,
                 metadata={"description": "Document chunks with embeddings"}
             )
-        
-        # Libraries collection
-        try:
-            self.libraries_collection = self.client.get_collection(
-                name="libraries",
+        else:
+            self.chunks_collection = self.client.get_collection(
+                name="chunks",
                 embedding_function=self.embedding_function
             )
-        except ValueError:
+        
+        # Libraries collection
+        if "libraries" not in collection_names:
             self.libraries_collection = self.client.create_collection(
                 name="libraries",
                 embedding_function=self.embedding_function,
                 metadata={"description": "Library information"}
+            )
+        else:
+            self.libraries_collection = self.client.get_collection(
+                name="libraries",
+                embedding_function=self.embedding_function
             )
     
     def add_document(self, doc_id: str, metadata: Dict):
@@ -201,7 +204,11 @@ class ChromaDBManager:
         Returns:
             List of libraries with metadata.
         """
-        results = self.libraries_collection.get()
+        try:
+            results = self.libraries_collection.get()
+        except Exception as e:
+            print(f"Error getting libraries: {str(e)}")
+            return []
         
         libraries = []
         if results and results["ids"]:
@@ -219,8 +226,20 @@ class ChromaDBManager:
         Returns:
             Dictionary with statistics.
         """
-        return {
-            "libraries": len(self.libraries_collection.get()["ids"]) if self.libraries_collection.get()["ids"] else 0,
-            "documents": len(self.documents_collection.get()["ids"]) if self.documents_collection.get()["ids"] else 0,
-            "chunks": len(self.chunks_collection.get()["ids"]) if self.chunks_collection.get()["ids"] else 0,
-        }
+        try:
+            libraries = self.libraries_collection.get()
+            documents = self.documents_collection.get()
+            chunks = self.chunks_collection.get()
+            
+            return {
+                "libraries": len(libraries["ids"]) if libraries and "ids" in libraries else 0,
+                "documents": len(documents["ids"]) if documents and "ids" in documents else 0,
+                "chunks": len(chunks["ids"]) if chunks and "ids" in chunks else 0,
+            }
+        except Exception as e:
+            print(f"Error getting statistics: {str(e)}")
+            return {
+                "libraries": 0,
+                "documents": 0,
+                "chunks": 0,
+            }
