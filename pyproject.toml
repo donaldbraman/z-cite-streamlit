@@ -1,0 +1,36 @@
+[project]
+name = "z-cite-streamlit"
+version = "0.1.0"
+description = "Z-Cite Streamlit Application for semantic search of Zotero libraries"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit==1.35.0",
+    "chromadb==0.4.22",
+    "sentence-transformers==3.4.1", 
+    "numpy<2.0.0",  # ChromaDB is not compatible with NumPy 2.0
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "isort>=5.0.0",
+]
+test = [
+    "pytest>=7.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+# Exclude packages released after this date for reproducibility
+exclude-newer = "2025-03-15T00:00:00Z"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
